@@ -173,10 +173,12 @@ Support may include:
 Financial contributions are accepted in a privacy-respecting way:
 
 **Monero (XMR) — preferred**
-85kkMcowoNwQwji3ugetQvfwismWuvGWWLWfhWoyLjqnDAcgsnpVMsWG76zMm3zEb9WfUcJqBCKZKQ8wVox58tfr7dY7CXF
+
+`85kkMcowoNwQwji3ugetQvfwismWuvGWWLWfhWoyLjqnDAcgsnpVMsWG76zMm3zEb9WfUcJqBCKZKQ8wVox58tfr7dY7CXF`
 
 **Bitcoin (BTC) — accepted (public by default)**
-bc1qqjw2qyj276jkwdd0wxm4y4vyggsmr73y9nm066
+
+`bc1qqjw2qyj276jkwdd0wxm4y4vyggsmr73y9nm066`
 
 For QR codes, and updated donation information, see:
 https://anonchatx.org/#supporters
