@@ -130,7 +130,7 @@ Centralized app stores, including Google Play, introduce risks such as:
   Applications that include strong encryption, Tor integration, or mechanisms
   designed to bypass network blocking may face additional scrutiny or removal.
 
-### For these reasons, AnonChatX prioritizes direct APK distribution and F-Droid, where users can independently verify builds and minimize reliance on centralized infrastructure.
+### For these reasons, AnonChatX prioritizes direct APK distribution and F-Droid (soon), where users can independently verify builds and minimize reliance on centralized infrastructure.
 
 ---
 
