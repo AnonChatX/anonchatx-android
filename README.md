@@ -170,6 +170,18 @@ Support may include:
 - Testing devices
 - Financial support
 
+Financial contributions are accepted in a privacy-respecting way:
+
+**Monero (XMR) — preferred**
+85kkMcowoNwQwji3ugetQvfwismWuvGWWLWfhWoyLjqnDAcgsnpVMsWG76zMm3zEb9WfUcJqBCKZKQ8wVox58tfr7dY7CXF
+
+**Bitcoin (BTC) — accepted (public by default)**
+bc1qqjw2qyj276jkwdd0wxm4y4vyggsmr73y9nm066
+
+For QR codes, and updated donation information, see:
+https://anonchatx.org/#supporters
+(onion mirror soon available)
+
 Part of the project’s resources are used to support the Tor ecosystem
 by running relays and bridges.
 
