@@ -689,7 +689,9 @@
 	<string name="stealth_mode_enabled">Stealth mode enabled.</string>
 
 	<string name="offline_maps_copy_onion_title">Where to get Offline Maps data</string>
-	<string name="offline_maps_onion_url">http://627jvml2fultrmzw4xjs4hdcxlhlymht5xyzqujmak5wevsdh34btjad.onion/Maps/</string>
+	<string name="offline_maps_onion_url">http://ucvmhctoq76k6qrdrvblxspjpk5rpjutsfe6nxyhgmvx25vruohxrnqd.onion/maps/export/</string>
+	<string name="offline_maps_clearnet_url">https://anonchatx.org/maps/export/</string>
+	<string name="copy_clearnet_url">Copy Clearnet URL</string>
 	<string name="offline_maps_copy_url_title">Copy Onion URL of Offline Maps Data Repository</string>
 	<string name="offline_maps_copy_url_summary">Tap to copy the Onion service URL for downloading offline maps data.</string>
 	<string name="offline_maps_url_copied_dialog_title">URL Copied</string>
@@ -701,25 +703,37 @@
 
 	<string name="tor_browser_required_title">Tor Browser Required</string>
 	<string name="tor_browser_required_message">
-To access this link securely, Tor Browser must be installed.
-</string>
+	This link is an Onion service and requires Tor Browser.\n\n
+	Opening the clearnet version may expose your IP address and network metadata.
+	</string>
+	<string name="open_clearnet_warning">Open clearnet URL (less private)</string>
 
 	<string name="install_tor_browser">Install Tor Browser</string>
 
 	<string name="offline_maps_help_intro">AnonChatX offline maps work entirely without internet (no server requests or logs like most mapping apps), making them the most secure and private way to share a location.</string>
 	<string name="offline_maps_help_preload_title">Pre-load Map Data</string>
 	<string name="offline_maps_help_preload_desc">To ensure no external server connections (and avoid leaking information such as your IP address, request metadata, etc.), AnonChatX requires map data to be preloaded into the app.</string>
-	<string name="offline_maps_help_download_title">Download Offline Map Data</string>
-	<string name="offline_maps_help_download_desc">The data is hosted on an Onion service, which requires the Tor Browser to access.\n\n1 - Copy the Offline Maps Data repository URL to your clipboard.\n\n2 - Open the Tor Browser, paste the URL, and access the service.</string>
-	<string name="offline_maps_help_data_title">Offline Map Data</string>
-	<string name="offline_maps_help_data_desc">The repository is organized as:\nMaps\n →    Country\n →       District\n →          City/Municipality\n\nEach folder contains a ZIP file named in this format\n&lt;area&gt;_&lt;minZoom&gt;_&lt;maxZoom&gt;.zip.\n\nFor example, “lisbon_12_17.zip” can be found under:\nMaps -> Portugal -> Lisbon and contains zoom levels between 12  and 17.</string>
+	<string name="offline_maps_help_download_title">Map Exporter tool</string>
+	<string name="offline_maps_help_download_desc">
+	Generate offline map packs using the Map Exporter, then import them into AnonChatX.\n\n
+	1 - Copy the Map Exporter URL to your clipboard.\n\n
+	2 - Open Tor Browser, paste the URL, and access the service.
+	</string>
+	<string name="offline_maps_help_data_title">Import exported map data</string>
+	<string name="offline_maps_help_data_desc">
+	After exporting a map pack:\n\n
+	1 - Go back and tap “Import Offline Map Data”.\n
+	2 - Select the ZIP file you want to import.\n
+	3 - Wait for the import to finish — large packs can take a while depending on file size and your device.
+	</string>
 	<string name="offline_maps_help_zoom_title">Zoom Levels</string>
-	<string name="offline_maps_help_zoom_desc">Zoom levels determine the map detail and affect the file size.\nLower zoom levels cover larger areas with less detail; higher zoom levels increase detail but also increase file size.</string>
+	<string name="offline_maps_help_zoom_desc">
+	Zoom levels control map detail and file size.\n
+	Lower zoom = larger area, less detail.\n
+	Higher zoom = more detail, bigger downloads.
+	</string>
 
 	<string name="offline_maps_help_summary">Learn how to download and use offline maps securely.</string>
-
-
-
 
 
 	<!--Offline Map-->

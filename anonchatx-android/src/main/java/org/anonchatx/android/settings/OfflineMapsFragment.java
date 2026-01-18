@@ -36,24 +36,6 @@ public class OfflineMapsFragment extends PreferenceFragmentCompat {
 	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 		setPreferencesFromResource(R.xml.offline_maps_preferences, rootKey);
 
-		Preference copyOnionUrlPref = findPreference("pref_key_copy_onion_url");
-		if (copyOnionUrlPref != null) {
-			copyOnionUrlPref.setOnPreferenceClickListener(preference -> {
-				String onionUrl = getString(R.string.offline_maps_onion_url);
-				android.content.ClipboardManager clipboard = (android.content.ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
-				android.content.ClipData clip = android.content.ClipData.newPlainText("Onion URL", onionUrl);
-				clipboard.setPrimaryClip(clip);
-
-				new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-						.setTitle(getString(R.string.offline_maps_url_copied_dialog_title))
-						.setMessage(getString(R.string.offline_maps_url_copied_dialog_message))
-						.setPositiveButton("OK", null)
-						.show();
-
-				return true;
-			});
-		}
-
 		// Hook the Import button
 		Preference importMaps = findPreference("pref_key_import_offline_maps");
 		if (importMaps != null) {

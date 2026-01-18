@@ -11,16 +11,6 @@
 		android:icon="@drawable/ic_help_outline_white" />
 
 	<PreferenceCategory
-		android:title="@string/offline_maps_copy_onion_title"
-		app:allowDividerAbove="true">
-
-		<Preference
-			android:key="pref_key_copy_onion_url"
-			android:title="@string/offline_maps_copy_url_title"
-			android:summary="@string/offline_maps_copy_url_summary" />
-	</PreferenceCategory>
-
-	<PreferenceCategory
 		android:title="@string/pref_category_offline_maps"
 		app:allowDividerAbove="true">
 
