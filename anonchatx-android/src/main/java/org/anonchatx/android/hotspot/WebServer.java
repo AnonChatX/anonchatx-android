@@ -59,8 +59,8 @@ class WebServer extends NanoHTTPD {
 		}
 
 		if (uri.endsWith(".apk")) {
-			if (uri.contains("mailbox")) {
-				return serveMailboxApk();
+			if (uri.contains("postbox")) {
+				return servePostboxApk();
 			} else if (uri.contains("ripple")) {
 				return serveRippleApk();
 			} else if (uri.contains("monerujo")) {
@@ -106,7 +106,7 @@ class WebServer extends NanoHTTPD {
 		// Mailbox
 		Element mailboxBtn = doc.select("#mailbox_button").first();
 		if (mailboxBtn != null) {
-			mailboxBtn.attr("href", "anonchat-mailbox.apk");
+			mailboxBtn.attr("href", "anonchatx-postbox.apk");
 			mailboxBtn.text(ctx.getString(R.string.website_download_mailbox_button));
 		}
 
@@ -180,10 +180,10 @@ class WebServer extends NanoHTTPD {
 		}
 	}
 
-	private Response serveMailboxApk() {
+	private Response servePostboxApk() {
 		String mime = "application/vnd.android.package-archive";
 		try {
-			InputStream is = ctx.getAssets().open("anonchat-mailbox.apk");
+			InputStream is = ctx.getAssets().open("anonchatx-postbox.apk");
 			int size = is.available();
 			Response res = newFixedLengthResponse(OK, mime, is, size);
 			res.addHeader("Content-Length", String.valueOf(size));
