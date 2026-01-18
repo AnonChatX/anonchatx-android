@@ -82,8 +82,6 @@ android {
 		}
 	}
 
-
-
 	defaultConfig {
 		minSdkVersion 24
 		targetSdkVersion 35
@@ -181,29 +179,13 @@ dependencies {
 	implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
 	implementation 'androidx.lifecycle:lifecycle-livedata:2.6.2'
 
-
 	implementation 'org.bouncycastle:bcprov-jdk15to18:1.71'
 	implementation 'androidx.security:security-crypto:1.1.0-alpha06'
 
 	implementation 'org.osmdroid:osmdroid-android:6.1.20'
-	// https://mvnrepository.com/artifact/com.arthenica/ffmpeg-kit-full-gpl
-	// https://mvnrepository.com/artifact/com.arthenica/mobile-ffmpeg-min
 	implementation(name: 'ffmpeg-kit-full-6.0-2', ext: 'aar')
 
-	// https://mvnrepository.com/artifact/com.arthenica/ffmpeg-kit-full
-	//implementation "com.arthenica:ffmpeg-kit-min-gpl:5.1.LTS"
-
-
 	implementation 'com.arthenica:smart-exception-java:0.2.0'
-
-
-// Core FFmpeg + platform-specific build
-//	implementation "org.bytedeco:ffmpeg:6.0-1.5.9"
-//	implementation "org.bytedeco:ffmpeg:6.0-1.5.9:android-arm64" // Add android-x86, x86_64, arm if needed
-
-
-// Required to avoid missing JNI methods
-	//implementation "org.bytedeco:javacpp:1.5.9"
 
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 	implementation 'com.google.android.material:material:1.9.0'
