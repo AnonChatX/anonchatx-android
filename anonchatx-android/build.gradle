@@ -87,8 +87,8 @@ android {
 	defaultConfig {
 		minSdkVersion 24
 		targetSdkVersion 35
-		versionCode 10000
-		versionName "1.0.0"
+		versionCode 10002
+		versionName "1.0.2"
 		applicationId "org.anonchatx.android"
 		buildConfigField "String", "TorVersion", "\"$tor_version\""
 
