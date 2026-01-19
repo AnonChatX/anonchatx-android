@@ -13,6 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,9 +37,26 @@ import static org.anonchatx.android.hotspot.HotspotViewModel.getApkFileName;
 class WebServer extends NanoHTTPD {
 
 	final static int PORT = 9999;
+
 	private static final Logger LOG = getLogger(WebServer.class.getName());
 	private static final String FILE_HTML = "hotspot.html";
+
+	private static final String MIME_APK = "application/vnd.android.package-archive";
 	private static final Pattern REGEX_AGENT = Pattern.compile("Android ([0-9]+)");
+
+	/**
+	 * Order matters: first match wins.
+	 * Key: substring in URI, Value: asset filename
+	 */
+	private static final Map<String, String> APK_ASSETS = new LinkedHashMap<>();
+	static {
+		APK_ASSETS.put("postbox", "anonchatx-postbox.apk");
+		APK_ASSETS.put("ripple", "ripple.apk");
+		APK_ASSETS.put("monerujo", "monerujo.apk");
+		APK_ASSETS.put("orbot", "orbot.apk");
+		APK_ASSETS.put("tor-browser", "tor-browser.apk");
+	}
+
 	private final Context ctx;
 
 	WebServer(Context ctx) {
@@ -59,33 +78,63 @@ class WebServer extends NanoHTTPD {
 		}
 
 		if (uri.endsWith(".apk")) {
-			if (uri.contains("postbox")) {
-				return servePostboxApk();
-			} else if (uri.contains("ripple")) {
-				return serveRippleApk();
-			} else if (uri.contains("monerujo")) {
-				return serveMonerujoApk();
-			} else if (uri.contains("orbot")) {
-				return serveOrbotApk();
-			} else if (uri.contains("tor-browser")) {
-				return serveTorbrowserApk();
-			} else {
-				return serveApk();
-			}
+			return serveApkForUri(uri);
 		}
 
-		Response res;
 		try {
 			String html = getHtml(session.getHeaders().get("user-agent"));
-			res = newFixedLengthResponse(OK, MIME_HTML, html);
+			return newFixedLengthResponse(OK, MIME_HTML, html);
 		} catch (Exception e) {
 			logException(LOG, WARNING, e);
-			res = newFixedLengthResponse(INTERNAL_ERROR, MIME_PLAINTEXT,
+			return newFixedLengthResponse(INTERNAL_ERROR, MIME_PLAINTEXT,
 					ctx.getString(R.string.hotspot_error_web_server_serve));
 		}
-		return res;
 	}
 
+	private Response serveApkForUri(String uri) {
+		// Serve known asset apks first
+		for (Map.Entry<String, String> e : APK_ASSETS.entrySet()) {
+			if (uri.contains(e.getKey())) {
+				return serveAssetFile(e.getValue(), MIME_APK);
+			}
+		}
+		// Fallback: serve installed app APK
+		return serveInstalledApk();
+	}
+
+	private Response serveInstalledApk() {
+		File file = new File(ctx.getPackageCodePath());
+		long fileLen = file.length();
+
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			Response res = newFixedLengthResponse(OK, MIME_APK, fis, fileLen);
+			res.addHeader("Content-Length", String.valueOf(fileLen));
+			return res;
+		} catch (FileNotFoundException e) {
+			logException(LOG, WARNING, e);
+			return newFixedLengthResponse(NOT_FOUND, MIME_PLAINTEXT,
+					ctx.getString(R.string.hotspot_error_web_server_serve));
+		}
+	}
+
+	private Response serveAssetFile(String assetName, String mime) {
+		try {
+			InputStream is = ctx.getAssets().open(assetName);
+
+			// NOTE: available() is not a guaranteed "total length" for all streams,
+			// but for AssetInputStream it typically corresponds to remaining bytes.
+			int size = is.available();
+
+			Response res = newFixedLengthResponse(OK, mime, is, size);
+			res.addHeader("Content-Length", String.valueOf(size));
+			return res;
+		} catch (IOException e) {
+			logException(LOG, WARNING, e);
+			return newFixedLengthResponse(NOT_FOUND, MIME_PLAINTEXT,
+					ctx.getString(R.string.hotspot_error_web_server_serve));
+		}
+	}
 
 	private String getHtml(@Nullable String userAgent) throws Exception {
 		Document doc;
@@ -95,58 +144,44 @@ class WebServer extends NanoHTTPD {
 		String filename = getApkFileName();
 
 		// AnonChat
-		doc.select("#download_title").first()
+		requireNonNull(doc.selectFirst("#download_title"))
 				.text(ctx.getString(R.string.website_download_title_1, VERSION_NAME));
-		doc.select("#download_intro").first()
+		requireNonNull(doc.selectFirst("#download_intro"))
 				.text(ctx.getString(R.string.website_download_intro_1));
-		doc.select(".button").first().attr("href", filename);
-		doc.select("#download_button").first()
+		requireNonNull(doc.selectFirst(".button")).attr("href", filename);
+		requireNonNull(doc.selectFirst("#download_button"))
 				.text(ctx.getString(R.string.website_download_button));
 
-		// Mailbox
-		Element mailboxBtn = doc.select("#mailbox_button").first();
-		if (mailboxBtn != null) {
-			mailboxBtn.attr("href", "anonchatx-postbox.apk");
-			mailboxBtn.text(ctx.getString(R.string.website_download_mailbox_button));
-		}
-
-		// Ripple
-		Element rippleBtn = doc.select("#ripple_button").first();
-		if (rippleBtn != null) {
-			rippleBtn.attr("href", "ripple.apk");
-			rippleBtn.text(ctx.getString(R.string.website_download_ripple_button));
-		}
-
-		Element monerujoBtn = doc.select("#monerujo_button").first();
-		if (monerujoBtn != null) {
-			monerujoBtn.attr("href", "monerujo.apk");
-			monerujoBtn.text(ctx.getString(R.string.website_download_monerujo_button));
-		}
-
-		Element orbotBtn = doc.select("#orbot_button").first();
-		if (orbotBtn != null) {
-			orbotBtn.attr("href", "orbot.apk");
-			orbotBtn.text(ctx.getString(R.string.website_download_orbot_button));
-		}
-
-		Element torbrowserBtn = doc.select("#torbrowser_button").first();
-		if (torbrowserBtn != null) {
-			torbrowserBtn.attr("href", "tor-browser.apk");
-			torbrowserBtn.text(ctx.getString(R.string.website_download_torbrowser_button));
-		}
-
+		// Optional buttons (only if present in HTML)
+		setButton(doc, "#mailbox_button", "anonchatx-postbox.apk",
+				R.string.website_download_mailbox_button);
+		setButton(doc, "#ripple_button", "ripple.apk",
+				R.string.website_download_ripple_button);
+		setButton(doc, "#monerujo_button", "monerujo.apk",
+				R.string.website_download_monerujo_button);
+		setButton(doc, "#orbot_button", "orbot.apk",
+				R.string.website_download_orbot_button);
+		setButton(doc, "#torbrowser_button", "tor-browser.apk",
+				R.string.website_download_torbrowser_button);
 
 		// Footer
-		doc.select("#download_outro").first()
+		requireNonNull(doc.selectFirst("#download_outro"))
 				.text(ctx.getString(R.string.website_download_outro));
-		doc.select("#troubleshooting_title").first()
+		requireNonNull(doc.selectFirst("#troubleshooting_title"))
 				.text(ctx.getString(R.string.website_troubleshooting_title));
-		doc.select("#troubleshooting_1").first()
+		requireNonNull(doc.selectFirst("#troubleshooting_1"))
 				.text(ctx.getString(R.string.website_troubleshooting_1));
-		doc.select("#troubleshooting_2").first()
+		requireNonNull(doc.selectFirst("#troubleshooting_2"))
 				.text(getUnknownSourcesString(userAgent));
 
 		return doc.outerHtml();
+	}
+
+	private void setButton(Document doc, String selector, String href, int textRes) {
+		Element btn = doc.selectFirst(selector);
+		if (btn == null) return;
+		btn.attr("href", href);
+		btn.text(ctx.getString(textRes));
 	}
 
 	private String getUnknownSourcesString(@Nullable String userAgent) {
@@ -161,97 +196,5 @@ class WebServer extends NanoHTTPD {
 		return is8OrHigher ?
 				ctx.getString(R.string.website_troubleshooting_2_new) :
 				ctx.getString(R.string.website_troubleshooting_2_old);
-	}
-
-	private Response serveApk() {
-		String mime = "application/vnd.android.package-archive";
-		File file = new File(ctx.getPackageCodePath());
-		long fileLen = file.length();
-
-		try {
-			FileInputStream fis = new FileInputStream(file);
-			Response res = newFixedLengthResponse(OK, mime, fis, fileLen);
-			res.addHeader("Content-Length", "" + fileLen);
-			return res;
-		} catch (FileNotFoundException e) {
-			logException(LOG, WARNING, e);
-			return newFixedLengthResponse(NOT_FOUND, MIME_PLAINTEXT,
-					ctx.getString(R.string.hotspot_error_web_server_serve));
-		}
-	}
-
-	private Response servePostboxApk() {
-		String mime = "application/vnd.android.package-archive";
-		try {
-			InputStream is = ctx.getAssets().open("anonchatx-postbox.apk");
-			int size = is.available();
-			Response res = newFixedLengthResponse(OK, mime, is, size);
-			res.addHeader("Content-Length", String.valueOf(size));
-			return res;
-		} catch (IOException e) {
-			logException(LOG, WARNING, e);
-			return newFixedLengthResponse(NOT_FOUND, MIME_PLAINTEXT,
-					ctx.getString(R.string.hotspot_error_web_server_serve));
-		}
-	}
-
-	private Response serveRippleApk() {
-		String mime = "application/vnd.android.package-archive";
-		try {
-			InputStream is = ctx.getAssets().open("ripple.apk");
-			int size = is.available();
-			Response res = newFixedLengthResponse(OK, mime, is, size);
-			res.addHeader("Content-Length", String.valueOf(size));
-			return res;
-		} catch (IOException e) {
-			logException(LOG, WARNING, e);
-			return newFixedLengthResponse(NOT_FOUND, MIME_PLAINTEXT,
-					ctx.getString(R.string.hotspot_error_web_server_serve));
-		}
-	}
-
-	private Response serveMonerujoApk() {
-		String mime = "application/vnd.android.package-archive";
-		try {
-			InputStream is = ctx.getAssets().open("monerujo.apk");
-			int size = is.available();
-			Response res = newFixedLengthResponse(OK, mime, is, size);
-			res.addHeader("Content-Length", String.valueOf(size));
-			return res;
-		} catch (IOException e) {
-			logException(LOG, WARNING, e);
-			return newFixedLengthResponse(NOT_FOUND, MIME_PLAINTEXT,
-					ctx.getString(R.string.hotspot_error_web_server_serve));
-		}
-	}
-
-	private Response serveOrbotApk() {
-		String mime = "application/vnd.android.package-archive";
-		try {
-			InputStream is = ctx.getAssets().open("orbot.apk");
-			int size = is.available();
-			Response res = newFixedLengthResponse(OK, mime, is, size);
-			res.addHeader("Content-Length", String.valueOf(size));
-			return res;
-		} catch (IOException e) {
-			logException(LOG, WARNING, e);
-			return newFixedLengthResponse(NOT_FOUND, MIME_PLAINTEXT,
-					ctx.getString(R.string.hotspot_error_web_server_serve));
-		}
-	}
-
-	private Response serveTorbrowserApk() {
-		String mime = "application/vnd.android.package-archive";
-		try {
-			InputStream is = ctx.getAssets().open("tor-browser.apk");
-			int size = is.available();
-			Response res = newFixedLengthResponse(OK, mime, is, size);
-			res.addHeader("Content-Length", String.valueOf(size));
-			return res;
-		} catch (IOException e) {
-			logException(LOG, WARNING, e);
-			return newFixedLengthResponse(NOT_FOUND, MIME_PLAINTEXT,
-					ctx.getString(R.string.hotspot_error_web_server_serve));
-		}
 	}
 }
