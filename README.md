@@ -134,21 +134,23 @@ Centralized app stores, including Google Play, introduce risks such as:
 
 ---
 
-## Open source & licensing
+## Open source & verification
 
-AnonChatX is open source and developed transparently.
+AnonChatX is developed transparently and in public.
 
 Security relies on:
-- Public, auditable code
+- Public, auditable source code
 - Independent review
-- The ability to fork and verify builds
+- The ability to fork, reproduce, and verify builds
 
-Licensing and attribution information is included in this repository.
 ---
 
 ## Contributing
 
-AnonChatX is an early-stage project. Contributions of all kinds are welcome:
+AnonChatX is under active development, with a strong focus on security,
+resilience, and real-world adversarial environments.
+
+Contributions of all kinds are welcome:
 
 - Android development
 - Networking & transport layers
@@ -157,6 +159,23 @@ AnonChatX is an early-stage project. Contributions of all kinds are welcome:
 - Documentation & threat analysis
 
 ➡️ See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+---
+
+## Contact
+
+For security-related matters, responsible disclosure, or project coordination,
+you can contact the AnonChatX maintainers at:
+
+**anonchatsec@protonmail.com**
+
+Proton Mail access:
+- Clearnet: https://proton.me
+- Tor (official Proton Mail Tor entry): 
+https://protonmailrmez3lotccipshtkleegetolb73fuirgj7r4o4vfu7ozyd.onion/
+
+Please avoid sharing sensitive operational details unless strictly necessary,
+and prefer encrypted communication when appropriate.
 
 ---
 
@@ -191,13 +210,35 @@ by running relays and bridges.
 
 ---
 
+## License
+
+AnonChatX is free and open source software, licensed under the
+**GNU General Public License v3.0 (GPL-3.0)**.
+
+This means you are free to:
+- Use the software for any purpose
+- Study how it works and modify it
+- Redistribute it
+- Distribute modified versions
+
+Under the following conditions:
+- Source code (including modifications) must be made available under the same license
+- License notices and attributions must be preserved
+- No additional restrictions may be imposed on users’ freedoms
+
+AnonChatX derives from the Briar project and other GPL-licensed components.
+All required attributions and license notices are included in this repository.
+
+See the [LICENSE](./LICENSE) file for full details.
+
+---
+
 ## Disclaimer
 
-AnonChatX is designed for real-world risk, but no software can eliminate all
-threats. Users are responsible for understanding their own environment,
+AnonChatX is designed for real-world adversarial environments, but no software
+can eliminate all risk.
+
+Users are responsible for understanding their own threat model,
 operational security, and legal context.
 
 Privacy is a condition you defend — not a checkbox you enable.
-
-AnonChatX derives from the Briar project.
-Attribution and license details are provided in the repository.
